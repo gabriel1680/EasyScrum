@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, String, Integer, DateTime
 from sqlalchemy.orm import relationship
 from model.base_model import BaseModel
-from typing import Union
+from typing import Optional, Union
 from datetime import datetime
 
 
@@ -19,7 +19,7 @@ class Task(BaseModel):
 
     category = relationship("Category")
 
-    def __init__(self, title: str, due_date: datetime, story: str, is_done: bool = False,
+    def __init__(self, title: str, due_date: datetime, story: str, is_done: Optional[bool] = False,
                  created_at: Union[DateTime, None] = None) -> None:
         """
         Cria uma instância de Task

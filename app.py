@@ -28,20 +28,16 @@ def create_task(form: CreateTaskRequest):
     try:
         task = Task(form.title, form.due_date, form.story, form.is_done)
 
-        task_exists = db.query(task).filter(task.email == task.email).first()
-
+        task_exists = db.query(task).filter(task.title == task.title).first()
         if task_exists:
-            error_message = "O e-mail {} está indisponível".format(task.email)
+            error_message = "Uma tarefa com o título {} já foi cadastrada nessa sprint".format(task.email)
             return {"message": error_message}, 400
-        
-        task.hash_password()
 
         db.add(task)
         db.commit()
         return task_to_output(task), 201
 
     except EntityValidationException as e:
-        print(e)
         return {"message": "message"}, 422
 
 

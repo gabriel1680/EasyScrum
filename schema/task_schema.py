@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel
 
@@ -10,7 +11,7 @@ class CreateTaskRequest(BaseModel):
 
     title: str = "Criação da tela de login"
     story: str = "Eu como usuário quero poder logar no sistem..."
-    due_date: str = "2018-11-15T00:00:00"
+    due_date: datetime = datetime.fromisoformat("2018-11-15T00:00:00")
     is_done: Optional[bool] = False
 
 
