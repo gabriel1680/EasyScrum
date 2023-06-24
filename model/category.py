@@ -1,10 +1,10 @@
 from sqlalchemy import Column, ForeignKey, Integer, DateTime
-from model.base_model import BaseModel
+from model.model import Model
 from typing import Union
 from datetime import datetime
 
 
-class Category(BaseModel):
+class Category(Model):
     """Representa o modelo persistência de 
     categoria de uma tarefa"""
 
@@ -22,7 +22,7 @@ class Category(BaseModel):
                  created_at: Union[DateTime, None] = None) -> None:
         """
         Cria uma instância de Category
-        
+
         Arguments:
             name: nome da categoria
             hex_color: cor da categoria em hexadecimal

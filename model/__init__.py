@@ -3,8 +3,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 import os
 
-from model.base_model import BaseModel
+from model.model import Model
 from model.task import Task
+from model.sprint import Sprint
 from model.category import Category
 from model.entity_validation_exception import EntityValidationException
 
@@ -22,4 +23,4 @@ Session = sessionmaker(bind=engine)
 if not database_exists(engine.url):
     create_database(engine.url)
 
-BaseModel.metadata.create_all(engine)
+Model.metadata.create_all(engine)
