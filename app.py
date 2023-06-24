@@ -49,15 +49,15 @@ def create_sprint(form: CreateSprintRequest):
         return {"message": "message"}, 422
 
 
-# @app.get("/sprints", tags=[sprint_tag], responses={"200": SprintListResponse})
-# def get_sprints():
-#     sprints = db.query(Sprint).all()
+@app.get("/sprints", tags=[sprint_tag], responses={"200": SprintListResponse})
+def get_sprints():
+    sprints = db.query(Sprint).all()
 
-#     if not sprints:
-#         return {"sprints": []}, 200
+    if not sprints:
+        return {"sprints": []}, 200
 
-#     output = list(map(lambda sprint: sprint_to_output(sprint), sprints))
-#     return {"sprints": output}, 200
+    output = list(map(lambda sprint: sprint_to_output(sprint), sprints))
+    return {"sprints": output}, 200
 
 
 @app.post("/sprints/<sprint_id>/task", tags=[task_tag],
@@ -100,15 +100,15 @@ def remove_task(id: int):
     return task_to_output(task), 204
 
 
-# @app.get("/sprints/<sprint_id>/tasks", tags=[task_tag], responses={"200": TaskListResponse})
-# def get_tasks():
-#     tasks = db.query(Task).all()
+@app.get("/sprints/<sprint_id>/tasks", tags=[task_tag], responses={"200": TaskListResponse})
+def get_tasks():
+    tasks = db.query(Task).all()
 
-#     if not tasks:
-#         return {"tasks": []}, 200
+    if not tasks:
+        return {"tasks": []}, 200
 
-#     output = list(map(lambda task: task_to_output(task), tasks))
-#     return {"tasks": output}, 200
+    output = list(map(lambda task: task_to_output(task), tasks))
+    return {"tasks": output}, 200
 
 
 if __name__ == "__main__":

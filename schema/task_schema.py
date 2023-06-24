@@ -1,14 +1,15 @@
 from datetime import datetime
 from typing import List, Optional
+from pydantic import BaseModel
 
-from schema.schema import Schema
 from model.task import Task
 
 
-class CreateTaskRequest(Schema):
+class CreateTaskRequest(BaseModel):
     """Definição do objeto da requisição de criação 
     de uma nova tarefa"""
 
+    id: int = 1
     sprint_id: int = 1
     title: str = "Criação da tela de login"
     story: str = "Eu como usuário quero poder logar no sistema..."
@@ -16,10 +17,11 @@ class CreateTaskRequest(Schema):
     is_done: Optional[bool] = False
 
 
-class TaskOutputResponse(Schema):
+class TaskOutputResponse(BaseModel):
     """Definição da resposta de criação ou busca de uma
     tarefa"""
 
+    id: int = 1
     sprint_id: int = 1
     title: str = "Criação da tela de login"
     story: str = "Eu como usuário quero poder logar no sistema..."
@@ -27,17 +29,18 @@ class TaskOutputResponse(Schema):
     is_done: Optional[bool] = False
 
 
-class TaskListResponse(Schema):
+class TaskListResponse(BaseModel):
     """Definição da resposta de listagem de
     usuários"""
 
-    tasks: List[Task]
+    tasks: List[TaskOutputResponse]
 
 
 def task_to_output(task: Task) -> dict:
     """Mapeia o modelo de tarefa para a visualização do cliente
     """
     return {
+        "id": task.id,
         "sprint_id": task.sprint_id,
         "title": task.title,
         "story": task.story,
