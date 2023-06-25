@@ -1,126 +1,18 @@
-from flask import redirect
-from flask_openapi3 import OpenAPI, Info, Tag
+from flask_openapi3 import OpenAPI, Info
 from flask_cors import CORS
 
-from model import Session
-from model.task import Task
-from model.sprint import Sprint
-from schema.error_schema import ErrorResponse
-from schema.task_schema import CreateTaskRequest, GetTaskRequest, TaskListResponse, TaskResponse, task_to_output
-from schema.sprint_schema import CreateSprintRequest, GetSprintRequest, SprintListResponse, SprintResponse, sprint_list_to_output, sprint_to_output
+from server.sprint_api import api as sprint_api
+from server.task_api import api as task_api
+from server.doc_api import api as doc_api
 
 info = Info(title="EasyScrum API", version="0.0.1")
 app = OpenAPI(__name__, info=info)
+
+app.register_api(doc_api)
+app.register_api(sprint_api)
+app.register_api(task_api)
+
 CORS(app)
-
-
-docs_tag = Tag(name="Documentação",
-               description="Documentação da aplicação: Swagger, Redoc ou RapiDoc")
-sprint_tag = Tag(name="Sprint", description="Adição e visualização de sprints")
-task_tag = Tag(
-    name="Tarefa", description="Adição, remoção e visualização de tarefas")
-
-
-db = Session()
-
-
-@app.get("/docs", tags=[docs_tag])
-def docs():
-    return redirect("/openapi")
-
-
-@app.post("/sprints", tags=[sprint_tag],
-          responses={"201": SprintResponse, "400": ErrorResponse})
-def create_sprint(form: CreateSprintRequest):
-    sprint = Sprint(form.name, form.description, form.is_done)
-
-    sprint_exists = db.query(Sprint).filter(
-        Sprint.name == sprint.name).first()
-    if sprint_exists:
-        error_message = "Uma sprint com o título {} já foi cadastrada".format(
-            sprint.name)
-        return {"message": error_message}, 400
-
-    db.add(sprint)
-    db.commit()
-    return sprint_to_output(sprint), 201
-
-
-@app.get("/sprints", tags=[sprint_tag], responses={"200": SprintListResponse})
-def get_sprints():
-    sprints = db.query(Sprint).all()
-
-    if not sprints:
-        return {"sprints": []}, 200
-
-    return sprint_list_to_output(sprints), 200
-
-
-@app.get("/sprints/<int:id>", tags=[sprint_tag], responses={"200": SprintListResponse})
-def get_sprint(path: GetSprintRequest):
-    sprint = db.query(Sprint).get(path.id)
-
-    if not sprint:
-        error_message = 'Sprint não encontrada'
-        return {"message": error_message}, 404
-
-    return sprint_to_output(sprint), 200
-
-
-@app.post("/sprints/<int:sprint_id>/tasks", tags=[task_tag],
-          responses={"201": TaskResponse, "400": ErrorResponse})
-def create_task(form: CreateTaskRequest):
-    sprint_exists = db.query(Sprint).get(form.sprint_id)
-    if not sprint_exists:
-        error_message = "Uma tarefa só pode ser criada em uma sprint válida"
-        return {"message": error_message}, 400
-
-    task = Task(form.sprint_id, form.title,
-                form.due_date, form.story, form.status)
-
-    task_exists = db.query(Task).filter(Task.title == task.title).first()
-    if task_exists:
-        error_message = "Uma tarefa com o título {} já foi cadastrada nessa sprint".format(
-            task.title)
-        return {"message": error_message}, 400
-
-    db.add(task)
-    db.commit()
-    return task_to_output(task), 201
-
-
-@app.delete("/sprints/<int:sprint_id>/tasks/<int:task_id>", tags=[task_tag],
-            responses={"204": TaskResponse, "404": ErrorResponse, "422": ErrorResponse})
-def remove_task(path: GetTaskRequest):
-    sprint = db.query(Sprint).get(path.sprint_id)
-    if not sprint:
-        error_message = "Sprint não encontrada"
-        return {"message": error_message}, 404
-
-    if sprint.is_done == True:
-        error_message = "Uma sprint finalizada não pode ter alteração nas suas tarefas"
-        return {"message": error_message}, 422
-
-    task = db.query(Task).get(path.task_id)
-    if not task:
-        error_message = "Tarefa não encontrada"
-        return {"message": error_message}, 404
-
-    db.delete(task)
-    db.commit()
-
-    return task_to_output(task), 204
-
-
-@app.get("/sprints/<int:sprint_id>/tasks", tags=[task_tag], responses={"200": TaskListResponse})
-def get_tasks():
-    tasks = db.query(Task).all()
-
-    if not tasks:
-        return {"tasks": []}, 200
-
-    output = list(map(lambda task: task_to_output(task), tasks))
-    return {"tasks": output}, 200
 
 
 if __name__ == "__main__":
