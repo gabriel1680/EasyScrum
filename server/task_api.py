@@ -5,7 +5,7 @@ from model.task import Task
 from model.sprint import Sprint
 from schema.error_schema import ErrorResponse
 from schema.task_schema import CreateTaskRequest, GetTaskRequest, TaskListResponse, \
-        TaskResponse, task_to_output
+        TaskResponse, UpdateTaskRequest, task_to_output
 
 task_tag = Tag(
     name="Tarefa", description="Adição, remoção e visualização de tarefas")
@@ -67,4 +67,27 @@ def get_tasks():
 
     output = list(map(lambda task: task_to_output(task), tasks))
     return {"tasks": output}, 200
+
+
+@api.patch("/sprints/<int:sprint_id>/tasks/<int:task_id>",
+           responses={"204": TaskResponse, "404": ErrorResponse, "422": ErrorResponse})
+def update_task(form: UpdateTaskRequest, path: GetTaskRequest):
+    sprint = db.query(Sprint).get(path.sprint_id)
+    if not sprint:
+        error_message = "Sprint não encontrada"
+        return {"message": error_message}, 404
+
+    if sprint.is_done == True:
+        error_message = "Uma sprint finalizada não pode ter alteração nas suas tarefas"
+        return {"message": error_message}, 422
+
+    task = db.query(Task).get(path.task_id)
+    if not task:
+        error_message = "Tarefa não encontrada"
+        return {"message": error_message}, 404
+
+    task.status = form.status
+    db.commit()
+
+    return "", 204
 

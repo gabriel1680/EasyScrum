@@ -55,3 +55,11 @@ def task_to_output(task: Task) -> dict:
         "due_date": task.due_date,
         "status": task.status
     }
+
+
+class UpdateTaskRequest(BaseModel):
+    """Definição do payload de atualização
+    de uma tarefa"""
+
+    status: str = "em andamento"
+
