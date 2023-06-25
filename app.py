@@ -6,8 +6,8 @@ from model import Session
 from model.task import Task
 from model.sprint import Sprint
 from schema.error_schema import ErrorResponse
-from schema.task_schema import CreateTaskRequest, GetTaskRequest, TaskListResponse, TaskOutputResponse, task_to_output
-from schema.sprint_schema import CreateSprintRequest, GetSprintSchema, SprintListOutputResponse, SprintOutputResponse, sprint_list_to_output, sprint_to_output
+from schema.task_schema import CreateTaskRequest, GetTaskRequest, TaskListResponse, TaskResponse, task_to_output
+from schema.sprint_schema import CreateSprintRequest, GetSprintRequest, SprintListResponse, SprintResponse, sprint_list_to_output, sprint_to_output
 
 info = Info(title="EasyScrum API", version="0.0.1")
 app = OpenAPI(__name__, info=info)
@@ -30,7 +30,7 @@ def docs():
 
 
 @app.post("/sprints", tags=[sprint_tag],
-          responses={"201": SprintOutputResponse, "400": ErrorResponse})
+          responses={"201": SprintResponse, "400": ErrorResponse})
 def create_sprint(form: CreateSprintRequest):
     sprint = Sprint(form.name, form.description, form.is_done)
 
@@ -46,7 +46,7 @@ def create_sprint(form: CreateSprintRequest):
     return sprint_to_output(sprint), 201
 
 
-@app.get("/sprints", tags=[sprint_tag], responses={"200": SprintListOutputResponse})
+@app.get("/sprints", tags=[sprint_tag], responses={"200": SprintListResponse})
 def get_sprints():
     sprints = db.query(Sprint).all()
 
@@ -56,8 +56,8 @@ def get_sprints():
     return sprint_list_to_output(sprints), 200
 
 
-@app.get("/sprints/<int:id>", tags=[sprint_tag], responses={"200": SprintListOutputResponse})
-def get_sprint(path: GetSprintSchema):
+@app.get("/sprints/<int:id>", tags=[sprint_tag], responses={"200": SprintListResponse})
+def get_sprint(path: GetSprintRequest):
     sprint = db.query(Sprint).get(path.id)
 
     if not sprint:
@@ -68,7 +68,7 @@ def get_sprint(path: GetSprintSchema):
 
 
 @app.post("/sprints/<int:sprint_id>/tasks", tags=[task_tag],
-          responses={"201": TaskOutputResponse, "400": ErrorResponse})
+          responses={"201": TaskResponse, "400": ErrorResponse})
 def create_task(form: CreateTaskRequest):
     sprint_exists = db.query(Sprint).get(form.sprint_id)
     if not sprint_exists:
@@ -90,7 +90,7 @@ def create_task(form: CreateTaskRequest):
 
 
 @app.delete("/sprints/<int:sprint_id>/tasks/<int:task_id>", tags=[task_tag],
-            responses={"204": TaskOutputResponse, "404": ErrorResponse, "422": ErrorResponse})
+            responses={"204": TaskResponse, "404": ErrorResponse, "422": ErrorResponse})
 def remove_task(path: GetTaskRequest):
     sprint = db.query(Sprint).get(path.sprint_id)
     if not sprint:

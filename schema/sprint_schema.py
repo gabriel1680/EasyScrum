@@ -3,7 +3,7 @@ from flask_openapi3.models.common import Field
 from pydantic import BaseModel
 
 from model.sprint import Sprint
-from schema.task_schema import TaskOutputResponse, task_to_output
+from schema.task_schema import TaskResponse, task_to_output
 
 
 class CreateSprintRequest(BaseModel):
@@ -15,7 +15,7 @@ class CreateSprintRequest(BaseModel):
     is_done: Optional[bool] = False
 
 
-class SprintOutputResponse(BaseModel):
+class SprintResponse(BaseModel):
     """Definição da resposta de criação ou busca de uma
     sprint"""
 
@@ -23,18 +23,20 @@ class SprintOutputResponse(BaseModel):
     name: str = "Atualização de informações cadastrais"
     description: str = "Liberação do campo de CPF para cadastro de novos clientes"
     is_done: Optional[bool] = False
-    tasks: List[TaskOutputResponse]
+    tasks: List[TaskResponse]
 
 
-class GetSprintSchema(BaseModel):
+class GetSprintRequest(BaseModel):
     """Definição dos parâmetros de busca
     de uma sprint"""
+
     id: int = Field(..., description='id da sprint')
 
 
 def sprint_to_output(sprint: Sprint) -> dict:
     """Mapeia o modelo de sprint para a visualização do cliente
     """
+
     return {
         "id": sprint.id,
         "name": sprint.name,
@@ -44,9 +46,10 @@ def sprint_to_output(sprint: Sprint) -> dict:
     }
 
 
-class SprintListOutputResponse(BaseModel):
+class SprintListResponse(BaseModel):
     """Definição da resposta de listagem de
     usuários"""
+
     id: int
     name: str
     description: str = "Liberação do campo de CPF para cadastro de novos clientes"

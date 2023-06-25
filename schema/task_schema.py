@@ -18,7 +18,7 @@ class CreateTaskRequest(BaseModel):
     status: str = "em andamento"
 
 
-class TaskOutputResponse(BaseModel):
+class TaskResponse(BaseModel):
     """Definição da resposta de criação ou busca de uma
     tarefa"""
 
@@ -34,7 +34,7 @@ class TaskListResponse(BaseModel):
     """Definição da resposta de listagem de
     usuários"""
 
-    tasks: List[TaskOutputResponse]
+    tasks: List[TaskResponse]
 
 
 class GetTaskRequest(BaseModel):
