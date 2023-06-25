@@ -1,4 +1,5 @@
 from typing import List, Optional
+from flask_openapi3.models.common import Field
 from pydantic import BaseModel
 
 from model.sprint import Sprint
@@ -22,6 +23,13 @@ class SprintOutputResponse(BaseModel):
     name: str = "Atualização de informações cadastrais"
     description: str = "Liberação do campo de CPF para cadastro de novos clientes"
     is_done: Optional[bool] = False
+    tasks: List[TaskOutputResponse]
+
+
+class GetSprintSchema(BaseModel):
+    """Definição dos parâmetros de busca
+    de uma sprint"""
+    id: int = Field(..., description='id da sprint')
 
 
 def sprint_to_output(sprint: Sprint) -> dict:
@@ -31,7 +39,8 @@ def sprint_to_output(sprint: Sprint) -> dict:
         "id": sprint.id,
         "name": sprint.name,
         "description": sprint.description,
-        "is_done": sprint.is_done
+        "is_done": sprint.is_done,
+        "tasks": list(map(lambda task: task_to_output(task), sprint.tasks))
     }
 
 
@@ -40,7 +49,8 @@ class SprintListOutputResponse(BaseModel):
     usuários"""
     id: int
     name: str
-    tasks: List[TaskOutputResponse]
+    description: str = "Liberação do campo de CPF para cadastro de novos clientes"
+    is_done: Optional[bool] = False
 
 
 def sprint_list_to_output(sprints: List[Sprint]):
@@ -51,6 +61,5 @@ def sprint_list_to_output(sprints: List[Sprint]):
             "name": sprint.name,
             "description": sprint.description,
             "is_done": sprint.is_done,
-            "tasks": list(map(lambda task: task_to_output(task), sprint.tasks))
         })
     return {"sprints": result}
