@@ -18,7 +18,7 @@ class Sprint(Model):
     is_done = Column('is_done', Boolean, default=False)
     created_at = Column('created_at', DateTime, default=datetime.now)
 
-    tasks = relationship('Task')
+    tasks = relationship('Task', backref='sprint')
 
     def __init__(self, name: str, description: str, is_done: Optional[bool] = False,
                  created_at: Union[DateTime, None] = None) -> None:

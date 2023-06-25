@@ -12,14 +12,13 @@ class Task(Model):
     __tablename__ = 'tasks'
 
     id = Column('id', Integer, primary_key=True)
-    sprint_id = Column('sprint_id', Integer)
+    sprint_id = Column('sprint_id', Integer, ForeignKey('sprints.id'))
     title = Column('title', String(255))
     story = Column('story', String(1000))
     due_date = Column('due_date', DateTime)
     status = Column('status', String)
     created_at = Column('created_at', DateTime, default=datetime.now)
 
-    sprint = Column(Integer, ForeignKey("sprints.id"))
     category = relationship("Category")
 
     def __init__(self, sprint_id: int, title: str, due_date: datetime, story: str,
