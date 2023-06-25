@@ -4,7 +4,8 @@ from model import db
 from model.task import Task
 from model.sprint import Sprint
 from schema.error_schema import ErrorResponse
-from schema.task_schema import CreateTaskRequest, GetTaskRequest, TaskListResponse, TaskResponse, task_to_output
+from schema.task_schema import CreateTaskRequest, GetTaskRequest, TaskListResponse, \
+        TaskResponse, task_to_output
 
 task_tag = Tag(
     name="Tarefa", description="Adição, remoção e visualização de tarefas")
@@ -12,7 +13,7 @@ task_tag = Tag(
 api = APIBlueprint("/sprints/<int:sprint_id>/tasks", __name__, abp_tags=[task_tag])
 
 
-@api.post("/sprints/<int:sprint_id>/tasks", tags=[task_tag],
+@api.post("/sprints/<int:sprint_id>/tasks",
           responses={"201": TaskResponse, "400": ErrorResponse})
 def create_task(form: CreateTaskRequest):
     sprint_exists = db.query(Sprint).get(form.sprint_id)
@@ -34,7 +35,7 @@ def create_task(form: CreateTaskRequest):
     return task_to_output(task), 201
 
 
-@api.delete("/sprints/<int:sprint_id>/tasks/<int:task_id>", tags=[task_tag],
+@api.delete("/sprints/<int:sprint_id>/tasks/<int:task_id>",
             responses={"204": TaskResponse, "404": ErrorResponse, "422": ErrorResponse})
 def remove_task(path: GetTaskRequest):
     sprint = db.query(Sprint).get(path.sprint_id)
@@ -57,7 +58,7 @@ def remove_task(path: GetTaskRequest):
     return task_to_output(task), 204
 
 
-@api.get("/sprints/<int:sprint_id>/tasks", tags=[task_tag], responses={"200": TaskListResponse})
+@api.get("/sprints/<int:sprint_id>/tasks", responses={"200": TaskListResponse})
 def get_tasks():
     tasks = db.query(Task).all()
 
