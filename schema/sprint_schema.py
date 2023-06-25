@@ -66,3 +66,10 @@ def sprint_list_to_output(sprints: List[Sprint]):
             "is_done": sprint.is_done,
         })
     return {"sprints": result}
+
+
+class UpdateSprintRequest(BaseModel):
+    """Definição do payload de atualização da sprint"""
+
+    is_done: bool = True
+
