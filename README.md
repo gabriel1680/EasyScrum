@@ -21,7 +21,15 @@ make venv
 Instalação das dependências do projeto
 
 ```sh
-make intall
+make install
+```
+
+Criação do arquivo .env para configuração das variáveis de ambiente
+
+Esse comando vai gerar um .env baseado no env.example por comodidade, mas você pode configurar o arquivo com os valores que quiser, respeitando somente os nomes das variáveis
+
+```sh
+make dev-env
 ```
 
 Iniciar o web server
