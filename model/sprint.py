@@ -1,5 +1,7 @@
-from sqlalchemy import Column, String, Integer, DateTime
+from typing import Optional
+from sqlalchemy import Column, String, Integer, DateTime, Boolean
 from sqlalchemy.orm import relationship
+
 from model.model import Model
 from typing import Union
 from datetime import datetime
@@ -13,12 +15,12 @@ class Sprint(Model):
     id = Column('id', Integer, primary_key=True)
     name = Column('name', String(255))
     description = Column('description', String(1000))
-    status = Column('status', String(50))
+    is_done = Column('is_done', Boolean, default=False)
     created_at = Column('created_at', DateTime, default=datetime.now)
 
     tasks = relationship('Task')
 
-    def __init__(self, name: str, description: str, status: str,
+    def __init__(self, name: str, description: str, is_done: Optional[bool] = False,
                  created_at: Union[DateTime, None] = None) -> None:
         """
         Cria uma instância de Sprint
@@ -26,12 +28,12 @@ class Sprint(Model):
         Arguments:
             name: nome da sprint
             description: descrição da sprint
-            status: status da sprint
+            is_done: se a sprint está finalizada ou não
             created_at: data de criação da tarefa
         """
         self.name = name
         self.description = description
-        self.status = status
+        self.is_done = is_done
 
         if created_at:
             self.created_at = created_at

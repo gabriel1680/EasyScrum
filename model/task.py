@@ -1,8 +1,9 @@
-from sqlalchemy import Boolean, Column, String, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from model.model import Model
-from typing import Optional, Union
+from typing import Union
 from datetime import datetime
+
+from model.model import Model
 
 
 class Task(Model):
@@ -15,15 +16,15 @@ class Task(Model):
     title = Column('title', String(255))
     story = Column('story', String(1000))
     due_date = Column('due_date', DateTime)
-    is_done = Column('is_done', Boolean, default=False)
+    status = Column('status', String)
     created_at = Column('created_at', DateTime, default=datetime.now)
 
-    sprint = Column(Integer, ForeignKey("sprints.id"), nullable=False)
+    sprint = Column(Integer, ForeignKey("sprints.id"))
     category = relationship("Category")
 
     def __init__(self, sprint_id: int, title: str, due_date: datetime, story: str,
-                is_done: Optional[bool] = False, 
-                created_at: Union[DateTime, None] = None) -> None:
+                 status: str,
+                 created_at: Union[DateTime, None] = None) -> None:
         """
         Cria uma instância de Task
 
@@ -32,14 +33,14 @@ class Task(Model):
             title: título da tarefa
             story: user story da tarefa
             due_date: prazo para conclusão
-            is_done: se a task está finalizada
+            status: status da tarefa
             created_at: data de criação da tarefa
         """
         self.sprint_id = sprint_id
         self.title = title
         self.story = story
         self.due_date = due_date
-        self.is_done = is_done
+        self.status = status
 
         if created_at:
             self.created_at = created_at

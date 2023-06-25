@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 from pydantic import BaseModel
 
 from model.task import Task
@@ -14,7 +14,7 @@ class CreateTaskRequest(BaseModel):
     title: str = "Criação da tela de login"
     story: str = "Eu como usuário quero poder logar no sistema..."
     due_date: datetime = datetime.fromisoformat("2018-11-15T00:00:00")
-    is_done: Optional[bool] = False
+    status: str = "em andamento"
 
 
 class TaskOutputResponse(BaseModel):
@@ -26,7 +26,7 @@ class TaskOutputResponse(BaseModel):
     title: str = "Criação da tela de login"
     story: str = "Eu como usuário quero poder logar no sistema..."
     due_date: str = "2018-11-15T00:00:00"
-    is_done: Optional[bool] = False
+    status: str = "em andamento"
 
 
 class TaskListResponse(BaseModel):
@@ -45,5 +45,5 @@ def task_to_output(task: Task) -> dict:
         "title": task.title,
         "story": task.story,
         "due_date": task.due_date,
-        "is_done": task.is_done
+        "status": task.status
     }

@@ -8,7 +8,7 @@ from model.task import Task
 from model.sprint import Sprint
 from schema.error_schema import ErrorResponse
 from schema.task_schema import CreateTaskRequest, TaskListResponse, TaskOutputResponse, task_to_output
-from schema.sprint_schema import CreateSprintRequest, SprintListResponse, SprintOutputResponse, sprint_to_output
+from schema.sprint_schema import CreateSprintRequest, SprintListOutputResponse, SprintOutputResponse, sprint_list_to_output, sprint_to_output
 
 info = Info(title="EasyScrum API", version="0.0.1")
 app = OpenAPI(__name__, info=info)
@@ -32,7 +32,7 @@ def docs():
           responses={"201": SprintOutputResponse, "422": ErrorResponse, "400": ErrorResponse})
 def create_sprint(form: CreateSprintRequest):
     try:
-        sprint = Sprint(form.name, form.description, form.status)
+        sprint = Sprint(form.name, form.description, form.is_done)
 
         sprint_exists = db.query(Sprint).filter(
             sprint.name == sprint.name).first()
@@ -49,18 +49,17 @@ def create_sprint(form: CreateSprintRequest):
         return {"message": "message"}, 422
 
 
-@app.get("/sprints", tags=[sprint_tag], responses={"200": SprintListResponse})
+@app.get("/sprints", tags=[sprint_tag], responses={"200": SprintListOutputResponse})
 def get_sprints():
     sprints = db.query(Sprint).all()
 
     if not sprints:
         return {"sprints": []}, 200
 
-    output = list(map(lambda sprint: sprint_to_output(sprint), sprints))
-    return {"sprints": output}, 200
+    return sprint_list_to_output(sprints), 200
 
 
-@app.post("/sprints/<sprint_id>/task", tags=[task_tag],
+@app.post("/sprints/<int:sprint_id>/tasks", tags=[task_tag],
           responses={"201": TaskOutputResponse, "422": ErrorResponse, "400": ErrorResponse})
 def create_task(form: CreateTaskRequest):
     try:
@@ -70,9 +69,9 @@ def create_task(form: CreateTaskRequest):
             return {"message": error_message}, 400
 
         task = Task(form.sprint_id, form.title,
-                    form.due_date, form.story, form.is_done)
+                    form.due_date, form.story, form.status)
 
-        task_exists = db.query(task).filter(task.title == task.title).first()
+        task_exists = db.query(Task).filter(task.title == task.title).first()
         if task_exists:
             error_message = "Uma tarefa com o título {} já foi cadastrada nessa sprint".format(
                 task.title)
