@@ -49,7 +49,7 @@ def get_sprint(path: GetSprintRequest):
     return sprint_to_output(sprint), 200
 
 
-@api.patch("/sprints/<int:id>")
+@api.patch("/sprints/<int:id>", responses={"204": None, "404": ErrorResponse})
 def update_sprint(form: UpdateSprintRequest, path: GetSprintRequest):
     sprint = db.query(Sprint).get(path.id)
 

@@ -36,7 +36,7 @@ def create_task(form: CreateTaskRequest):
 
 
 @api.delete("/sprints/<int:sprint_id>/tasks/<int:task_id>",
-            responses={"204": TaskResponse, "404": ErrorResponse, "422": ErrorResponse})
+            responses={"204": None, "404": ErrorResponse, "422": ErrorResponse})
 def remove_task(path: GetTaskRequest):
     sprint = db.query(Sprint).get(path.sprint_id)
     if not sprint:
@@ -55,7 +55,7 @@ def remove_task(path: GetTaskRequest):
     db.delete(task)
     db.commit()
 
-    return task_to_output(task), 204
+    return "", 204
 
 
 @api.get("/sprints/<int:sprint_id>/tasks", responses={"200": TaskListResponse})
@@ -70,7 +70,7 @@ def get_tasks():
 
 
 @api.patch("/sprints/<int:sprint_id>/tasks/<int:task_id>",
-           responses={"204": TaskResponse, "404": ErrorResponse, "422": ErrorResponse})
+           responses={"204": None, "404": ErrorResponse, "422": ErrorResponse})
 def update_task(form: UpdateTaskRequest, path: GetTaskRequest):
     sprint = db.query(Sprint).get(path.sprint_id)
     if not sprint:
