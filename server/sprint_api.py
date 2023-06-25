@@ -1,6 +1,6 @@
 from flask_openapi3 import APIBlueprint, Tag
 
-from model import Session
+from model import db
 from model.sprint import Sprint
 from schema.error_schema import ErrorResponse
 from schema.sprint_schema import CreateSprintRequest, GetSprintRequest, SprintListResponse, SprintResponse, sprint_list_to_output, sprint_to_output
@@ -9,7 +9,6 @@ from schema.sprint_schema import CreateSprintRequest, GetSprintRequest, SprintLi
 sprint_tag = Tag(name="Sprint", description="Adição e visualização de sprints")
 api = APIBlueprint("/sprints", __name__, abp_tags=[sprint_tag])
 
-db = Session()
 
 @api.post("/sprints", tags=[sprint_tag],
           responses={"201": SprintResponse, "400": ErrorResponse})
@@ -47,3 +46,4 @@ def get_sprint(path: GetSprintRequest):
         return {"message": error_message}, 404
 
     return sprint_to_output(sprint), 200
+

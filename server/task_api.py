@@ -1,18 +1,16 @@
 from flask_openapi3 import APIBlueprint, Tag
 
-from model import Session
+from model import db
 from model.task import Task
 from model.sprint import Sprint
 from schema.error_schema import ErrorResponse
 from schema.task_schema import CreateTaskRequest, GetTaskRequest, TaskListResponse, TaskResponse, task_to_output
-
 
 task_tag = Tag(
     name="Tarefa", description="Adição, remoção e visualização de tarefas")
 
 api = APIBlueprint("/sprints/<int:sprint_id>/tasks", __name__, abp_tags=[task_tag])
 
-db = Session()
 
 @api.post("/sprints/<int:sprint_id>/tasks", tags=[task_tag],
           responses={"201": TaskResponse, "400": ErrorResponse})
@@ -68,3 +66,4 @@ def get_tasks():
 
     output = list(map(lambda task: task_to_output(task), tasks))
     return {"tasks": output}, 200
+
