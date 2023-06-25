@@ -7,7 +7,6 @@ from model.model import Model
 from model.task import Task
 from model.sprint import Sprint
 from model.category import Category
-from model.entity_validation_exception import EntityValidationException
 
 db_path = 'database/'
 

@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import List
+from flask_openapi3.models.common import Field
 from pydantic import BaseModel
 
 from model.task import Task
@@ -34,6 +35,13 @@ class TaskListResponse(BaseModel):
     usuários"""
 
     tasks: List[TaskOutputResponse]
+
+
+class GetTaskRequest(BaseModel):
+    """Definição da busca de uma tarefa"""
+
+    sprint_id: int = Field(..., description='Id da sprint que a tarefa pertence')
+    task_id: int = Field(..., description='Id da tarefa')
 
 
 def task_to_output(task: Task) -> dict:

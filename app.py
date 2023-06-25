@@ -6,7 +6,7 @@ from model import Session
 from model.task import Task
 from model.sprint import Sprint
 from schema.error_schema import ErrorResponse
-from schema.task_schema import CreateTaskRequest, TaskListResponse, TaskOutputResponse, task_to_output
+from schema.task_schema import CreateTaskRequest, GetTaskRequest, TaskListResponse, TaskOutputResponse, task_to_output
 from schema.sprint_schema import CreateSprintRequest, GetSprintSchema, SprintListOutputResponse, SprintOutputResponse, sprint_list_to_output, sprint_to_output
 
 info = Info(title="EasyScrum API", version="0.0.1")
@@ -30,7 +30,7 @@ def docs():
 
 
 @app.post("/sprints", tags=[sprint_tag],
-          responses={"201": SprintOutputResponse, "422": ErrorResponse, "400": ErrorResponse})
+          responses={"201": SprintOutputResponse, "400": ErrorResponse})
 def create_sprint(form: CreateSprintRequest):
     sprint = Sprint(form.name, form.description, form.is_done)
 
@@ -89,10 +89,19 @@ def create_task(form: CreateTaskRequest):
     return task_to_output(task), 201
 
 
-@app.delete("/sprints/<sprint_id>/task/<task_id>", tags=[task_tag],
-            responses={"204": TaskOutputResponse, "404": ErrorResponse})
-def remove_task(id: int):
-    task = db.query(Task).get(id)
+@app.delete("/sprints/<int:sprint_id>/tasks/<int:task_id>", tags=[task_tag],
+            responses={"204": TaskOutputResponse, "404": ErrorResponse, "422": ErrorResponse})
+def remove_task(path: GetTaskRequest):
+    sprint = db.query(Sprint).get(path.sprint_id)
+    if not sprint:
+        error_message = "Sprint não encontrada"
+        return {"message": error_message}, 404
+
+    if sprint.is_done == True:
+        error_message = "Uma sprint finalizada não pode ter alteração nas suas tarefas"
+        return {"message": error_message}, 422
+
+    task = db.query(Task).get(path.task_id)
     if not task:
         error_message = "Tarefa não encontrada"
         return {"message": error_message}, 404
@@ -103,7 +112,7 @@ def remove_task(id: int):
     return task_to_output(task), 204
 
 
-@app.get("/sprints/<sprint_id>/tasks", tags=[task_tag], responses={"200": TaskListResponse})
+@app.get("/sprints/<int:sprint_id>/tasks", tags=[task_tag], responses={"200": TaskListResponse})
 def get_tasks():
     tasks = db.query(Task).all()
 
