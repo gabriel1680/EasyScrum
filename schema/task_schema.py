@@ -12,10 +12,10 @@ class CreateTaskRequest(BaseModel):
 
     id: int = 1
     sprint_id: int = 1
-    title: str = "Criação da tela de login"
-    story: str = "Eu como usuário quero poder logar no sistema..."
-    due_date: datetime = datetime.fromisoformat("2018-11-15T00:00:00")
-    status: str = "em andamento"
+    title: str = 'Criação da tela de login'
+    story: str = 'Eu como usuário quero poder logar no sistema...'
+    due_date: datetime = datetime.fromisoformat('2018-11-15T00:00:00')
+    status: str = 'em andamento'
 
 
 class TaskResponse(BaseModel):
@@ -24,10 +24,10 @@ class TaskResponse(BaseModel):
 
     id: int = 1
     sprint_id: int = 1
-    title: str = "Criação da tela de login"
-    story: str = "Eu como usuário quero poder logar no sistema..."
-    due_date: str = "2018-11-15T00:00:00"
-    status: str = "em andamento"
+    title: str = 'Criação da tela de login'
+    story: str = 'Eu como usuário quero poder logar no sistema...'
+    due_date: str = '2018-11-15T00:00:00'
+    status: str = 'em andamento'
 
 
 class TaskListResponse(BaseModel):
@@ -48,12 +48,12 @@ def task_to_output(task: Task) -> dict:
     """Mapeia o modelo de tarefa para a visualização do cliente
     """
     return {
-        "id": task.id,
-        "sprint_id": task.sprint_id,
-        "title": task.title,
-        "story": task.story,
-        "due_date": task.due_date,
-        "status": task.status
+        'id': task.id,
+        'sprint_id': task.sprint_id,
+        'title': task.title,
+        'story': task.story,
+        'due_date': task.due_date,
+        'status': task.status
     }
 
 
@@ -61,5 +61,5 @@ class UpdateTaskRequest(BaseModel):
     """Definição do payload de atualização
     de uma tarefa"""
 
-    status: str = "em andamento"
+    status: str = 'em andamento'
 
