@@ -1,6 +1,7 @@
 from typing import List, Optional
 from flask_openapi3.models.common import Field
 from pydantic import BaseModel
+from datetime import datetime
 
 from model.sprint import Sprint
 from schema.task_schema import TaskResponse, task_to_output
@@ -12,6 +13,7 @@ class CreateSprintRequest(BaseModel):
 
     name: str = 'Atualização de informações cadastrais'
     description: str = 'Liberação do campo de CPF para cadastro de novos clientes'
+    due_date: datetime = datetime.fromisoformat('2018-11-15T00:00:00')
     is_done: Optional[bool] = False
 
 
@@ -22,6 +24,7 @@ class SprintResponse(BaseModel):
     id: int = 1
     name: str = 'Atualização de informações cadastrais'
     description: str = 'Liberação do campo de CPF para cadastro de novos clientes'
+    due_date: str = '2018-11-15T00:00:00'
     is_done: Optional[bool] = False
     tasks: List[TaskResponse]
 
@@ -41,6 +44,7 @@ def sprint_to_output(sprint: Sprint) -> dict:
         "id": sprint.id,
         "name": sprint.name,
         "description": sprint.description,
+        "due_date": sprint.due_date,
         "is_done": sprint.is_done,
         "tasks": list(map(lambda task: task_to_output(task), sprint.tasks))
     }
@@ -51,8 +55,9 @@ class SprintListResponse(BaseModel):
     usuários"""
 
     id: int
-    name: str
+    name: str = 'Novas informações de clientes'
     description: str = 'Liberação do campo de CPF para cadastro de novos clientes'
+    due_date: str = '2018-11-15'
     is_done: Optional[bool] = False
 
 
@@ -64,6 +69,8 @@ def sprint_list_to_output(sprints: List[Sprint]):
             'name': sprint.name,
             'description': sprint.description,
             'is_done': sprint.is_done,
+            'due_date': sprint.due_date,
+            "tasks": list(map(lambda task: task_to_output(task), sprint.tasks))
         })
     return {'sprints': result}
 

@@ -4,8 +4,8 @@ from model import db
 from model.sprint import Sprint
 from schema.error_schema import ErrorResponse
 from schema.sprint_schema import CreateSprintRequest, GetSprintRequest,\
-        SprintListResponse, SprintResponse, UpdateSprintRequest, sprint_list_to_output, \
-        sprint_to_output
+    SprintListResponse, SprintResponse, UpdateSprintRequest, sprint_list_to_output, \
+    sprint_to_output
 
 
 sprint_tag = Tag(name='Sprint', description='Adição e visualização de sprints')
@@ -14,7 +14,7 @@ api = APIBlueprint('/sprints', __name__, abp_tags=[sprint_tag])
 
 @api.post('/sprints', responses={'201': SprintResponse, '400': ErrorResponse})
 def create_sprint(form: CreateSprintRequest):
-    sprint = Sprint(form.name, form.description, form.is_done)
+    sprint = Sprint(form.name, form.description, form.due_date, form.is_done)
 
     sprint_exists = db.query(Sprint).filter(
         Sprint.name == sprint.name).first()
@@ -61,4 +61,3 @@ def update_sprint(form: UpdateSprintRequest, path: GetSprintRequest):
     db.commit()
 
     return '', 204
-
