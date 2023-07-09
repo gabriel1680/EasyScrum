@@ -11,11 +11,11 @@ from schema.sprint_schema import CreateSprintRequest, GetSprintRequest,\
 sprint_tag = Tag(name='Sprint', description='Adição e visualização de sprints')
 api = APIBlueprint('/sprints', __name__, abp_tags=[sprint_tag])
 
+db = Session()
+
 
 @api.post('/sprints', responses={'201': SprintResponse, '400': ErrorResponse})
 def create_sprint(form: CreateSprintRequest):
-    db = Session()
-
     sprint = Sprint(form.name, form.description, form.due_date)
 
     sprint_exists = db.query(Sprint).filter(
@@ -32,8 +32,6 @@ def create_sprint(form: CreateSprintRequest):
 
 @api.get('/sprints', responses={'200': SprintListResponse})
 def get_sprints():
-    db = Session()
-
     sprints = db.query(Sprint).all()
 
     if not sprints:
@@ -44,8 +42,6 @@ def get_sprints():
 
 @api.get('/sprints/<int:id>', responses={'200': SprintListResponse})
 def get_sprint(path: GetSprintRequest):
-    db = Session()
-
     sprint = db.query(Sprint).get(path.id)
 
     if not sprint:
