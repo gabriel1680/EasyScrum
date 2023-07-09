@@ -22,10 +22,14 @@ class CreateTaskRequest(BaseModel):
     """Definição do objeto da requisição de criação 
     de uma nova tarefa"""
 
-    title: str = Field(..., description='Título da tarefa')
-    story: str = Field(..., description='User story da tarefa')
-    due_date: datetime = Field(..., description='Data de término da tarefa')
-    status: TaskStatus = Field(..., description='Status da tarefa (done, in progress, revision, bakclog)')
+    title: str = Field(..., description='Título da tarefa',
+                       example='Alterar o status da terfa arrastando os cards')
+    story: str = Field(..., description='User story da tarefa',
+                       example='Eu como usuário quero poder alterar o status da tarefa apenas arrastando os cards...')
+    due_date: datetime = Field(..., description='Data de término da tarefa',
+                               example='2022-11-25T00:00:00')
+    status: TaskStatus = Field(
+        ..., description='Status da tarefa (done, in progress, revision, bakclog)', example='backlog')
 
 
 class TaskResponse(BaseModel):
@@ -50,14 +54,16 @@ class TaskListResponse(BaseModel):
 class GetTaskRequest(BaseModel):
     """Definição da busca de uma tarefa"""
 
-    sprint_id: int = Field(..., description='Id da sprint que a tarefa pertence')
-    task_id: int = Field(..., description='Id da tarefa')
+    sprint_id: int = Field(...,
+                           description='Id da sprint que a tarefa pertence', example=1)
+    task_id: int = Field(..., description='Id da tarefa', example=1)
 
 
 class GetTasksRequest(BaseModel):
     """Definição da busca de tarefas de uma sprint"""
 
-    sprint_id: int = Field(..., description='Id da sprint que a tarefa pertence')
+    sprint_id: int = Field(...,
+                           description='Id da sprint que a tarefa pertence', example=1)
 
 
 def task_to_output(task: Task) -> dict:
@@ -77,10 +83,11 @@ class UpdateTaskRequest(BaseModel):
     """Definição do payload de atualização
     de uma tarefa"""
 
-    title: str = Field(..., description='Título da tarefa')
-    story: str = Field(..., description='User story da tarefa')
-    due_date: datetime = Field(..., description='Data de término da tarefa')
-    status: TaskStatus = Field(..., description='Status da tarefa (done, in progress, revision, bakclog)')
-
-
-
+    title: str = Field(..., description='Título da tarefa',
+                       example='Alterar o status da terfa clicando nos cards')
+    story: str = Field(..., description='User story da tarefa',
+                       example='Eu como usuário quero poder alterar o status da tarefa apenas clianco em um único botão no card...')
+    due_date: datetime = Field(..., description='Data de término da tarefa',
+                               example='2022-11-25T00:00:00')
+    status: TaskStatus = Field(
+        ..., description='Status da tarefa (done, in progress, revision, bakclog)', example='backlog')

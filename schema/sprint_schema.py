@@ -11,9 +11,11 @@ class CreateSprintRequest(BaseModel):
     """Definição do objeto da requisição de criação 
     de uma nova sprint"""
 
-    name: str = Field(..., description='Nome da sprint')
-    description: str = Field(..., description='Descrição da sprint')
-    due_date: datetime = Field(..., description='Data de término da sprint')
+    name: str = Field(..., description='Nome da sprint', example='SSO')
+    description: str = Field(..., description='Descrição da sprint',
+                             example='Com o aumento de usuários resolvemos delegar a autenticação para um sistema terceiro (ex: OAuth)')
+    due_date: datetime = Field(..., description='Data de término da sprint',
+                               example='2022-11-15T00:00:00')
 
 
 class SprintResponse(BaseModel):
@@ -30,7 +32,7 @@ class GetSprintRequest(BaseModel):
     """Definição dos parâmetros de busca
     de uma sprint"""
 
-    id: int = Field(..., description='id da sprint')
+    id: int = Field(..., description='id da sprint', example=1)
 
 
 def sprint_to_output(sprint: Sprint) -> dict:
@@ -74,4 +76,3 @@ def sprint_list_to_output(sprints: List[Sprint]):
             "tasks": list(map(lambda task: task_to_output(task), sprint.tasks))
         })
     return {'sprints': result}
-
