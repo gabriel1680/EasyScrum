@@ -2,7 +2,7 @@
 
 Api rest para gestão de projetos ágeis usando scrum
 
-# Features
+## Features
 
 - Criação de sprints
 - Adição de user stories em cada tarefa
@@ -10,11 +10,11 @@ Api rest para gestão de projetos ágeis usando scrum
 - Remoção e conclusão de tarefas
 - Listagem das sprints e tarefas
 
-# Documentação da API e endpoints
+## Documentação da API e endpoints
 
 A documentação é servida no endpoint `/docs` da aplicação.
 
-# Execução
+## Execução
 
 Criação do ambiente virtual do python
 
