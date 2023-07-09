@@ -11,9 +11,9 @@ class CreateSprintRequest(BaseModel):
     """Definição do objeto da requisição de criação 
     de uma nova sprint"""
 
-    name: str = 'Atualização de informações cadastrais'
-    description: str = 'Liberação do campo de CPF para cadastro de novos clientes'
-    due_date: datetime = datetime.fromisoformat('2018-11-15T00:00:00')
+    name: str = Field(..., description='Nome da sprint')
+    description: str = Field(..., description='Descrição da sprint')
+    due_date: datetime = Field(..., description='Data de término da sprint')
 
 
 class SprintResponse(BaseModel):
@@ -24,7 +24,6 @@ class SprintResponse(BaseModel):
     name: str = 'Atualização de informações cadastrais'
     description: str = 'Liberação do campo de CPF para cadastro de novos clientes'
     due_date: str = '2018-11-15T00:00:00'
-    tasks: List[TaskResponse]
 
 
 class GetSprintRequest(BaseModel):
@@ -46,14 +45,22 @@ def sprint_to_output(sprint: Sprint) -> dict:
     }
 
 
+class SprintList(BaseModel):
+    """Definição dos dados da resposta de listagem de
+    usuários"""
+
+    id: int = 1
+    name: str = 'Novas informações de clientes'
+    description: str = 'Liberação do campo de CPF para cadastro de novos clientes'
+    due_date: str = '2018-11-15'
+    tasks: List[TaskResponse]
+
+
 class SprintListResponse(BaseModel):
     """Definição da resposta de listagem de
     usuários"""
 
-    id: int
-    name: str = 'Novas informações de clientes'
-    description: str = 'Liberação do campo de CPF para cadastro de novos clientes'
-    due_date: str = '2018-11-15'
+    sprints: List[SprintList]
 
 
 def sprint_list_to_output(sprints: List[Sprint]):

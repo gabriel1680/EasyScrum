@@ -1,19 +1,31 @@
 from datetime import datetime
 from typing import List
+
+from sqlalchemy import Enum
 from flask_openapi3.models.common import Field
 from pydantic import BaseModel
 
 from model.task import Task
 
 
+class TaskStatus(str, Enum):
+    """Tipos de status que uma task pode ter
+    """
+
+    BACKLOG = 'backlog'
+    IN_PROGRESS = 'in progress'
+    REVISION = 'revision'
+    DONE = 'done'
+
+
 class CreateTaskRequest(BaseModel):
     """Definição do objeto da requisição de criação 
     de uma nova tarefa"""
 
-    title: str = 'Criação da tela de login'
-    story: str = 'Eu como usuário quero poder logar no sistema...'
-    due_date: datetime = datetime.fromisoformat('2018-11-15T00:00:00')
-    status: str = 'em andamento'
+    title: str = Field(..., description='Título da tarefa')
+    story: str = Field(..., description='User story da tarefa')
+    due_date: datetime = Field(..., description='Data de término da tarefa')
+    status: TaskStatus = Field(..., description='Status da tarefa (done, in progress, revision, bakclog)')
 
 
 class TaskResponse(BaseModel):
@@ -65,8 +77,10 @@ class UpdateTaskRequest(BaseModel):
     """Definição do payload de atualização
     de uma tarefa"""
 
-    title: str = 'Criação da tela de login'
-    story: str = 'Eu como usuário quero poder logar no sistema...'
-    due_date: datetime = datetime.fromisoformat('2018-11-15T00:00:00')
-    status: str = 'em andamento'
+    title: str = Field(..., description='Título da tarefa')
+    story: str = Field(..., description='User story da tarefa')
+    due_date: datetime = Field(..., description='Data de término da tarefa')
+    status: TaskStatus = Field(..., description='Status da tarefa (done, in progress, revision, bakclog)')
+
+
 

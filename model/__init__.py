@@ -18,8 +18,6 @@ engine = create_engine(db_url, echo=False)
 
 Session = sessionmaker(bind=engine)
 
-db = Session()
-
 if not database_exists(engine.url):
     create_database(engine.url)
 
