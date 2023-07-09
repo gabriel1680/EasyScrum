@@ -6,7 +6,6 @@ import os
 from model.model import Model
 from model.task import Task
 from model.sprint import Sprint
-from model.category import Category
 
 db_path = 'database/'
 

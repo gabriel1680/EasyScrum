@@ -1,5 +1,4 @@
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
 from typing import Union
 from datetime import datetime
 
@@ -18,8 +17,6 @@ class Task(Model):
     due_date = Column('due_date', DateTime)
     status = Column('status', String)
     created_at = Column('created_at', DateTime, default=datetime.now)
-
-    category = relationship("Category")
 
     def __init__(self, sprint_id: int, title: str, due_date: datetime, story: str,
                  status: str,
