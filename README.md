@@ -55,3 +55,9 @@ Iniciando o servidor
 ```sh
 flask run
 ```
+
+# Documentação da API
+
+A documentação é servida no endpoint `/docs` da aplicação.
+
+
