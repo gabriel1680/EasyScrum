@@ -10,7 +10,11 @@ Api rest para gestão de projetos ágeis usando scrum
 - Remoção e conclusão de tarefas
 - Listagem das sprints e tarefas
 
-## Execução
+# Documentação da API e endpoints
+
+A documentação é servida no endpoint `/docs` da aplicação.
+
+# Execução
 
 Criação do ambiente virtual do python
 
@@ -55,9 +59,4 @@ Iniciando o servidor
 ```sh
 flask run
 ```
-
-# Documentação da API
-
-A documentação é servida no endpoint `/docs` da aplicação.
-
 
