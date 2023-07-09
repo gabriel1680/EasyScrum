@@ -13,12 +13,12 @@ task_tag = Tag(
 api = APIBlueprint('/sprints/<int:sprint_id>/tasks',
                    __name__, abp_tags=[task_tag])
 
-db = Session()
-
 
 @api.post('/sprints/<int:sprint_id>/tasks',
           responses={'201': TaskResponse, '400': ErrorResponse})
 def create_task(form: CreateTaskRequest, path: GetTasksRequest):
+    db = Session()
+
     sprint_id = path.sprint_id
     sprint_exists = db.query(Sprint).get(sprint_id)
     if not sprint_exists:
@@ -36,12 +36,15 @@ def create_task(form: CreateTaskRequest, path: GetTasksRequest):
 
     db.add(task)
     db.commit()
+
     return task_to_output(task), 201
 
 
 @api.delete('/sprints/<int:sprint_id>/tasks/<int:task_id>',
             responses={'204': None, '404': ErrorResponse, '422': ErrorResponse})
 def remove_task(path: GetTaskRequest):
+    db = Session()
+
     sprint = db.query(Sprint).get(path.sprint_id)
     if not sprint:
         error_message = 'Sprint não encontrada'
@@ -60,18 +63,22 @@ def remove_task(path: GetTaskRequest):
 
 @api.get('/sprints/<int:sprint_id>/tasks', responses={'200': TaskListResponse})
 def get_tasks(path: GetTasksRequest):
+    db = Session()
     tasks = db.query(Task).filter(Task.sprint_id == path.sprint_id).all()
 
     if not tasks:
         return {'tasks': []}, 200
 
     output = list(map(lambda task: task_to_output(task), tasks))
+    db.close()
     return {'tasks': output}, 200
 
 
 @api.put('/sprints/<int:sprint_id>/tasks/<int:task_id>',
          responses={'204': None, '404': ErrorResponse, '422': ErrorResponse})
 def update_task(form: UpdateTaskRequest, path: GetTaskRequest):
+    db = Session()
+
     sprint = db.query(Sprint).get(path.sprint_id)
     if not sprint:
         error_message = 'Sprint não encontrada'

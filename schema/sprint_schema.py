@@ -15,7 +15,7 @@ class CreateSprintRequest(BaseModel):
     description: str = Field(..., description='Descrição da sprint',
                              example='Com o aumento de usuários resolvemos delegar a autenticação para um sistema terceiro (ex: OAuth)')
     due_date: datetime = Field(..., description='Data de término da sprint',
-                               example='2022-11-15T00:00:00')
+                               example='2023-08-18T00:00:00')
 
 
 class SprintResponse(BaseModel):
@@ -76,3 +76,4 @@ def sprint_list_to_output(sprints: List[Sprint]):
             "tasks": list(map(lambda task: task_to_output(task), sprint.tasks))
         })
     return {'sprints': result}
+

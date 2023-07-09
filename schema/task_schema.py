@@ -27,9 +27,9 @@ class CreateTaskRequest(BaseModel):
     story: str = Field(..., description='User story da tarefa',
                        example='Eu como usuário quero poder alterar o status da tarefa apenas arrastando os cards...')
     due_date: datetime = Field(..., description='Data de término da tarefa',
-                               example='2022-11-25T00:00:00')
+                               example='2024-11-25T00:00:00')
     status: TaskStatus = Field(
-        ..., description='Status da tarefa (done, in progress, revision, bakclog)', example='backlog')
+        ..., description='Status da tarefa (done, in progress, revision, backlog)', example='backlog')
 
 
 class TaskResponse(BaseModel):
@@ -88,6 +88,6 @@ class UpdateTaskRequest(BaseModel):
     story: str = Field(..., description='User story da tarefa',
                        example='Eu como usuário quero poder alterar o status da tarefa apenas clianco em um único botão no card...')
     due_date: datetime = Field(..., description='Data de término da tarefa',
-                               example='2022-11-25T00:00:00')
+                               example='2024-11-25T00:00:00')
     status: TaskStatus = Field(
-        ..., description='Status da tarefa (done, in progress, revision, bakclog)', example='backlog')
+        ..., description='Status da tarefa (done, in progress, revision, backlog)', example='backlog')
